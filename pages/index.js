@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Image from 'next/image'
 import { useState, useContext } from 'react'
 import { MainContext } from '../context'
 import BigNumber from 'bignumber.js'
@@ -14,14 +15,16 @@ export default function Home() {
   } = useContext(MainContext);
 
   const uploadImage = async () => {
-    let txn = await bundlrInst.uploader.upload(selectedFile, [{ name: "Content-Type", value: "image/png" }]);
+    await bundlrInst.uploader;
+    let txn = await bundlrInst.uploader.upload(selectedFile, [{ name: "Content-Type", value: "application/x-directory" }]);
     setURI(`http://arweave.net/${txn.data.id}`);
     getBalance();
   }
 
   const handleFileChange = (e) => {
     const reader = new FileReader();
-    const file = e.target.files[0];
+    debugger
+    const file = e.target.files;
     if (file) {
       reader.onloadend = () => {
         if (reader.result) {
@@ -75,6 +78,7 @@ export default function Home() {
           <input
             type='file'
             onChange={handleFileChange}
+            directory="" webkitdirectory=""
           />
           <button style={button} onClick={uploadImage}>
             Upload Image
@@ -86,7 +90,7 @@ export default function Home() {
               <h3>Our Image</h3>
               {img && (
                 <div>
-                  <img src={img} style={previewStyle} />
+                  <Image src={img} alt="local preview" style={previewStyle} />
                 </div>
               )
               }
@@ -95,8 +99,8 @@ export default function Home() {
               <h3>Arweave Image</h3>
               {URI && (
                 <>
-                  <img src={URI} style={previewStyle} />
-                  <a href={URI} target="_blank">{URI}</a>
+                  <Image src={URI} alt="arweave preview" style={previewStyle} />
+                  <a href={URI} target="_blank" rel="noreferrer">{URI}</a>
                 </>
               )
               }
