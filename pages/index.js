@@ -15,16 +15,15 @@ export default function Home() {
   } = useContext(MainContext);
 
   const uploadImage = async () => {
-    await bundlrInst.uploader;
-    let txn = await bundlrInst.uploader.upload(selectedFile, [{ name: "Content-Type", value: "application/x-directory" }]);
+    let txn = await bundlrInst.uploader.upload(selectedFile, [{ name: "Content-Type", value: "image/png" }]);
     setURI(`http://arweave.net/${txn.data.id}`);
     getBalance();
   }
 
   const handleFileChange = (e) => {
     const reader = new FileReader();
-    debugger
-    const file = e.target.files;
+
+    const file = e.target.files[0];
     if (file) {
       reader.onloadend = () => {
         if (reader.result) {
@@ -78,7 +77,6 @@ export default function Home() {
           <input
             type='file'
             onChange={handleFileChange}
-            directory="" webkitdirectory=""
           />
           <button style={button} onClick={uploadImage}>
             Upload Image
