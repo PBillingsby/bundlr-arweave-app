@@ -15,8 +15,13 @@ export default function Home() {
   } = useContext(MainContext);
 
   const uploadImage = async () => {
-    let txn = await bundlrInst.uploader.upload(selectedFile, [{ name: "Content-Type", value: "image/png" }]);
-    setURI(`http://arweave.net/${txn.data.id}`);
+    try {
+      let txn = await bundlrInst.uploader.upload(selectedFile, [{ name: "Content-Type", value: "image/png" }]);
+      setURI(`http://arweave.net/${txn.data.id}`);
+    }
+    catch (error) {
+      console.log('error with upload: ', error);
+    }
     getBalance();
   }
 
@@ -39,8 +44,13 @@ export default function Home() {
   const fundWallet = async () => {
     if (!amount) return;
     const parseAmount = parseInput(amount);
-    let response = await bundlrInst.fund(parseAmount);
-    console.log('wallet funded: ', response);
+    try {
+      let response = await bundlrInst.fund(parseAmount);
+      console.log('wallet funded: ', response);
+    }
+    catch (error) {
+      console.log('error funding wallet: ', error);
+    }
     getBalance();
   }
 
@@ -88,7 +98,7 @@ export default function Home() {
               <h3>Our Image</h3>
               {img && (
                 <div>
-                  <Image src={img} alt="local preview" style={previewStyle} />
+                  <Image src={img} width={128} height={128} alt="local preview" style={previewStyle} />
                 </div>
               )
               }
@@ -97,7 +107,7 @@ export default function Home() {
               <h3>Arweave Image</h3>
               {URI && (
                 <>
-                  <Image src={URI} alt="arweave preview" style={previewStyle} />
+                  <Image src={URI} width={128} height={128} alt="arweave preview" style={previewStyle} />
                   <a href={URI} target="_blank" rel="noreferrer">{URI}</a>
                 </>
               )
@@ -109,8 +119,6 @@ export default function Home() {
   )
 }
 const previewStyle = {
-  maxWidth: '500px',
-  height: 'auto',
   margin: '0 auto'
 }
 
