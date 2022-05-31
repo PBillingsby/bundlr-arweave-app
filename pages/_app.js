@@ -9,30 +9,21 @@ function MyApp({ Component, pageProps }) {
   const bundlrRef = useRef();
 
   const initialize = async () => {
-    try {
-      await window.ethereum.enable();
-      const provider = new providers.Web3Provider(window.ethereum);
-      await provider._ready();
+    await window.ethereum.enable();
+    const provider = new providers.Web3Provider(window.ethereum);
+    await provider._ready();
 
-      const bundlr = new WebBundlr('https://node1.bundlr.network', 'matic', provider)
-      await bundlr.ready();
+    const bundlr = new WebBundlr('https://node1.bundlr.network', 'matic', provider)
+    await bundlr.ready();
 
-      setBundlrInst(bundlr);
-      bundlrRef.current = bundlr;
-    }
-    catch (error) {
-      console.log('Must have metamask: ', error);
-    }
+    setBundlrInst(bundlr);
+    bundlrRef.current = bundlr;
     getBalance();
   }
 
   const getBalance = async () => {
-    try {
-      const bal = await bundlrRef.current.getLoadedBalance();
-      setBalance(utils.formatEther(bal.toString()));
-    } catch (error) {
-      console.log('error getting balance: ', error);
-    }
+    const bal = await bundlrRef.current.getLoadedBalance();
+    setBalance(utils.formatEther(bal.toString()));
   }
 
   return (
